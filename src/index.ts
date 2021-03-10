@@ -1,26 +1,32 @@
 import "reflect-metadata";
 import { ApolloServer } from "apollo-server";
-import { buildSchema, Query, Resolver } from "type-graphql";
+import { buildSchema } from "type-graphql";
+import mongoose from "mongoose";
+import * as dotenv from "dotenv";
 
-@Resolver()
-class HelloResolver {
+// Preloads config before other imports to ensure env variables are available asap
+dotenv.config();
 
-  @Query(() => String, { description: "Returs a hello world message" })
-  async hello() {
-    return "Hello world, I'm Beto!"
-  }
-}
+import { UserResolvers } from "./graphql/resolvers/User/UserResolvers";
+import { ApiConstants } from "./api.constants";
 
 const main = async () => {
+    try {
+        const MONGO_DB = process.env.MONGO_DB || ApiConstants.DEFAULT_MONGODB;
+        await mongoose.connect(MONGO_DB, { useNewUrlParser: true, useUnifiedTopology: true });
 
-    const schema = await buildSchema({
-        resolvers: [HelloResolver]
-    });
+        const schema = await buildSchema({
+            resolvers: [UserResolvers]
+        });
 
-    const apolloServer = new ApolloServer({schema});
+        const apolloServer = new ApolloServer({schema});
 
-    const server = await apolloServer.listen({ port: 5000 });
-    console.log(`Server running at ${server.url}`);
+        const server = await apolloServer.listen({ port: process.env.API_PORT || ApiConstants.DEFAULT_API_PORT });
+        console.log(`Server running at ${server.url}`);
+    }
+    catch(err) {
+        console.error("Error initializing server: ", err);
+    }
 };
 
 main();
