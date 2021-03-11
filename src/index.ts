@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { ApolloServer } from "apollo-server";
 import { buildSchema } from "type-graphql";
 import mongoose from "mongoose";
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 
 // Preloads config before other imports to ensure env variables are available asap
 dotenv.config();

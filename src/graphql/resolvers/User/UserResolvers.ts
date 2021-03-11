@@ -1,6 +1,6 @@
 import { getModelForClass,  } from "@typegoose/typegoose";
 import { Arg, FieldResolver, Mutation, Query, Resolver, Root } from "type-graphql";
-import * as bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 
 import { User } from "../../entities/User";
 
@@ -16,7 +16,7 @@ export class UserResolvers {
     }
 
     @Query(() => User, { nullable: true })
-    public async getUser(
+    public async getUserByName(
         @Arg("name") name: string
     ): Promise<User | null> {
         const foundUser = await this.UserModel.findOne({name});
