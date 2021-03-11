@@ -9,6 +9,14 @@ export class UserResolvers {
 
     private UserModel = getModelForClass(User);
 
+    @Query(() => User, { nullable: true })
+    async getUser(
+        @Arg("name") name: string
+    ): Promise<User | null> {
+        const foundUser = await this.UserModel.findOne({name});
+        return foundUser;
+    }
+
     @Query(() => [User])
     async getUsers(): Promise<Array<User>> {
         const users = await this.UserModel.find();
