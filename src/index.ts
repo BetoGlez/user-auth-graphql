@@ -7,7 +7,8 @@ import dotenv from "dotenv";
 // Preloads config before other imports to ensure env variables are available asap
 dotenv.config();
 
-import { UserResolvers } from "./graphql/resolvers/User/UserResolvers";
+import { UserQueryResolvers } from "./graphql/resolvers/user/queries/UserQueryResolvers";
+import { UserMutationResolvers } from "./graphql/resolvers/user/mutations/UserMutationResolvers";
 import { ApiConstants } from "./api.constants";
 
 const main = async () => {
@@ -16,10 +17,10 @@ const main = async () => {
         await mongoose.connect(MONGO_DB, { useNewUrlParser: true, useUnifiedTopology: true });
 
         const schema = await buildSchema({
-            resolvers: [UserResolvers]
+            resolvers: [UserQueryResolvers, UserMutationResolvers]
         });
 
-        const apolloServer = new ApolloServer({schema});
+        const apolloServer = new ApolloServer({ schema });
 
         const server = await apolloServer.listen({ port: process.env.API_PORT || ApiConstants.DEFAULT_API_PORT });
         console.log(`Server running at ${server.url}`);
