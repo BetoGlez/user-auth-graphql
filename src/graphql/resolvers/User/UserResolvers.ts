@@ -1,16 +1,22 @@
 import { getModelForClass,  } from "@typegoose/typegoose";
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, FieldResolver, Mutation, Query, Resolver, Root } from "type-graphql";
 import * as bcrypt from "bcryptjs";
 
 import { User } from "../../entities/User";
 
-@Resolver()
+@Resolver(User)
 export class UserResolvers {
 
     private UserModel = getModelForClass(User);
 
+    @FieldResolver()
+    public async nameInitials(@Root() parent: any): Promise<string> {
+        const initials = (parent as User).name.substr(0, 2).toUpperCase();
+        return initials;
+    }
+
     @Query(() => User, { nullable: true })
-    async getUser(
+    public async getUser(
         @Arg("name") name: string
     ): Promise<User | null> {
         const foundUser = await this.UserModel.findOne({name});
@@ -18,13 +24,13 @@ export class UserResolvers {
     }
 
     @Query(() => [User])
-    async getUsers(): Promise<Array<User>> {
+    public async getUsers(): Promise<Array<User>> {
         const users = await this.UserModel.find();
         return users;
     }
 
     @Mutation(() => User)
-    async register(
+    public async register(
         @Arg("name") name: string,
         @Arg("email") email: string,
         @Arg("password") password: string
