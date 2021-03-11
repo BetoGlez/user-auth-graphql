@@ -1,6 +1,5 @@
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, ObjectType, Root } from "type-graphql";
 import { prop } from "@typegoose/typegoose";
-
 
 @ObjectType()
 export class User {
@@ -16,7 +15,10 @@ export class User {
     public email: string;
 
     @Field()
-    public nameInitials: string;
+    public nameInitials(@Root() parent: any): string {
+        const initials = (parent as User).name.substr(0, 2).toUpperCase();
+        return initials;
+    }
 
     @prop({ required: true })
     public password: string;

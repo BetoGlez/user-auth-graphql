@@ -1,19 +1,13 @@
 import { getModelForClass,  } from "@typegoose/typegoose";
-import { Arg, FieldResolver, Mutation, Query, Resolver, Root } from "type-graphql";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import bcrypt from "bcryptjs";
 
 import { User } from "../../entities/User";
 
-@Resolver(User)
+@Resolver()
 export class UserResolvers {
 
     private UserModel = getModelForClass(User);
-
-    @FieldResolver()
-    public async nameInitials(@Root() parent: any): Promise<string> {
-        const initials = (parent as User).name.substr(0, 2).toUpperCase();
-        return initials;
-    }
 
     @Query(() => User, { nullable: true })
     public async getUserByName(
