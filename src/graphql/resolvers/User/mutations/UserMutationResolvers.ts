@@ -6,6 +6,7 @@ import { User, UserModel } from "../../../entities/User";
 import { RegisterInput } from "../input/RegisterInput";
 import { LoginInput } from "../input/LoginInput";
 import { generateToken } from "../../../../utils/tokens";
+import { sendEmail } from "../../../../utils/sendEmail";
 
 @Resolver()
 export class UserMutationResolvers {
@@ -17,6 +18,9 @@ export class UserMutationResolvers {
         const encryptedPwd = await bcrypt.hash(password, 12);
         const newUser = { name, email, password: encryptedPwd } as User;
         const newUserResult = await UserModel.create(newUser);
+
+        await sendEmail(newUserResult.email, newUserResult.name);
+
         return newUserResult;
     }
 
