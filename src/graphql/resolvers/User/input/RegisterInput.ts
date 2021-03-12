@@ -6,13 +6,13 @@ import { Field, InputType } from "type-graphql";
 export class RegisterInput {
     @Field()
     @Length(1, 255)
-    name: string;
+    public name: string;
 
     @Field()
     @IsEmail({}, { message: "invalidEmail" })
     @IsEmailAlreadyExist({ message: "alreadyExistsEmail" })
-    email: string;
+    public email: string;
 
     @Field()
-    password: string;
+    public password: string;
 }

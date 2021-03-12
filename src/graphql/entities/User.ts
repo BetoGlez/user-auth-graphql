@@ -20,6 +20,9 @@ export class User {
         return initials;
     }
 
+    @Field()
+    public token: string;
+
     @prop({ required: true })
     public password: string;
 }
