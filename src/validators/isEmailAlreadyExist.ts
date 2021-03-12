@@ -1,5 +1,5 @@
 import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
-import { UserModel } from "../entities/User";
+import { UserModel } from "../graphql/entities/User";
 
 @ValidatorConstraint({ async: true })
 export class IsEmailAlreadyExistConstraint implements ValidatorConstraintInterface {

@@ -20,7 +20,7 @@ const main = async () => {
             resolvers: [UserQueryResolvers, UserMutationResolvers]
         });
 
-        const apolloServer = new ApolloServer({ schema });
+        const apolloServer = new ApolloServer({ schema, context: ({ req }) => ({ req })});
 
         const server = await apolloServer.listen({ port: process.env.API_PORT || ApiConstants.DEFAULT_API_PORT });
         console.log(`Server running at ${server.url}`);
